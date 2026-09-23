@@ -1,0 +1,22 @@
+name: Shiprocket Auto Sync
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - run: pip install requests supabase
+      - env:
+          SHIPROCKET_EMAIL: ${{ secrets.SHIPROCKET_EMAIL }}
+          SHIPROCKET_PASSWORD: ${{ secrets.SHIPROCKET_PASSWORD }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python sync.py
